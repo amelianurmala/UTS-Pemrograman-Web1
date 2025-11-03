@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Pengiriman</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="tracking-page">
+  <header class="tracking-header">
+    <h1>📦 Informasi Pengiriman</h1>
+    <div class="user-info">
+      <span id="userGreeting"></span>
+      <button id="backBtn">⬅ Kembali</button>
+    </div>
+  </header>
+
+  <main class="tracking-main">
+    <!-- FORM PENCARIAN -->
+    <div class="tracking-card">
+      <h2>Cari Pengiriman</h2>
+      <div class="search-box">
+        <input type="text" id="inputNomorDO" placeholder="Masukkan Nomor Delivery Order..." />
+        <button id="btnCari">🔍 Cari</button>
+      </div>
+    </div>
+
+    <!-- HASIL PENGIRIMAN -->
+    <div id="hasilPengiriman" class="tracking-result hidden">
+      <h2>Detail Pengiriman</h2>
+      <div class="tracking-info">
+        <p><strong>Nama Pemesan:</strong> <span id="namaPemesan"></span></p>
+        <p><strong>Ekspedisi:</strong> <span id="ekspedisi"></span></p>
+        <p><strong>Tanggal Kirim:</strong> <span id="tanggalKirim"></span></p>
+        <p><strong>Jenis Paket:</strong> <span id="jenisPaket"></span></p>
+        <p><strong>Total Pembayaran:</strong> <span id="totalPembayaran"></span></p>
+      </div>
+
+      <h3>Status Pengiriman</h3>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <p id="statusText"></p>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script>
+    // --- Cek login ---
+    const namaUser = localStorage.getItem("namaUser");
+    const userGreeting = document.getElementById("userGreeting");
+    if (!namaUser) {
+      alert("Silakan login terlebih dahulu!");
+      window.location.href = "index.html";
+    } else {
+      userGreeting.textContent = `Halo, ${namaUser}! 👋`;
+    }
+
+    const inputNomorDO = document.getElementById("inputNomorDO");
+    const btnCari = document.getElementById("btnCari");
+    const hasilPengiriman = document.getElementById("hasilPengiriman");
+
+    const namaPemesan = document.getElementById("namaPemesan");
+    const ekspedisi = document.getElementById("ekspedisi");
+    const tanggalKirim = document.getElementById("tanggalKirim");
+    const jenisPaket = document.getElementById("jenisPaket");
+    const totalPembayaran = document.getElementById("totalPembayaran");
+    const progressBar = document.getElementById("progressBar");
+    const statusText = document.getElementById("statusText");
+
+    // --- Fungsi Cari Data Pengiriman ---
+    btnCari.addEventListener("click", () => {
+      const nomorDO = inputNomorDO.value.trim();
+      if (!nomorDO) {
+        alert("Masukkan nomor Delivery Order terlebih dahulu!");
+        return;
+      }
+
+      const data = dataTracking[nomorDO];
+      if (!data) {
+        alert("Nomor DO tidak ditemukan!");
+        hasilPengiriman.classList.add("hidden");
+        return;
+      }
+
+      hasilPengiriman.classList.remove("hidden");
+      namaPemesan.textContent = data.nama;
+      ekspedisi.textContent = data.ekspedisi;
+      tanggalKirim.textContent = data.tanggalKirim;
+      jenisPaket.textContent = data.jenisPaket || "Reguler";
+      totalPembayaran.textContent = data.total;
+
+      // Status bar berdasarkan status
+      const status = data.status.toLowerCase();
+      let progress = 0;
+      let warna = "#ccc";
+      let text = "";
+
+      if (status.includes("dikirim")) {
+        progress = 33;
+        warna = "#ffcc00";
+        text = "Pesanan sedang dikirim 📦";
+      } else if (status.includes("dalam perjalanan")) {
+        progress = 66;
+        warna = "#0d6efd";
+        text = "Pesanan dalam perjalanan 🚚";
+      } else if (status.includes("selesai")) {
+        progress = 100;
+        warna = "#28a745";
+        text = "Pesanan sudah diterima ✅";
+      }
+
+      progressBar.style.width = progress + "%";
+      progressBar.style.background = warna;
+      statusText.textContent = text;
+    });
+
+    // --- Tombol kembali ke dashboard ---
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+<script>
+  const searchBtn = document.getElementById("btnCari");
+  const input = document.getElementById("nomorDO");
+  const result = document.getElementById("trackingResult");
+
+  searchBtn.addEventListener("click", function () {
+    const nomor = input.value.trim();
+
+    // Validasi input kosong
+    if (nomor === "") {
+      alert("⚠️ Nomor Delivery Order tidak boleh kosong!");
+      return;
+    }
+
+    const data = dataTracking[nomor];
+    if (!data) {
+      alert("❌ Nomor Delivery Order tidak ditemukan!");
+      result.classList.add("hidden");
+      return;
+    }
+
+    alert(`✅ Data pengiriman untuk ${data.nama} ditemukan!`);
+    // tampilkan hasil seperti biasa
+    result.classList.remove("hidden");
+    document.getElementById("namaPemesan").textContent = data.nama;
+    document.getElementById("status").textContent = data.status;
+    document.getElementById("ekspedisi").textContent = data.ekspedisi;
+    document.getElementById("tanggalKirim").textContent = data.tanggalKirim;
+    document.getElementById("paket").textContent = data.paket;
+    document.getElementById("total").textContent = data.total;
+  });
+</script>
+
+
+<footer class="site-footer">
+  © Amelia Nurmala Dewi– Universitas Pelita Bangsa 2025
+</footer>

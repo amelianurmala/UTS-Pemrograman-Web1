@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Toko Buku Online</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="dashboard-page">
+
+  <header class="dashboard-header">
+    <h1>Toko Buku Online</h1>
+    <div class="user-section">
+      <span id="greetingText"></span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <div class="dashboard-card">
+      <h2>Selamat Datang di Toko Buku Online</h2>
+      <p>Kelola informasi buku, pantau pengiriman, dan lihat laporan transaksi dengan mudah.</p>
+
+      <div class="menu-container">
+        <div class="menu-card" onclick="location.href='stok.html'">
+          📘 <h3>Informasi Stok / Katalog</h3>
+          <p>Lihat daftar buku yang tersedia dan tambahkan stok baru.</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='tracking.html'">
+          🚚 <h3>Tracking Pengiriman</h3>
+          <p>Pantau status pengiriman pesanan pelanggan secara real-time.</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='checkout.html'">
+          🧾 <h3>Laporan Pemesanan</h3>
+          <p>Cek data pemesanan dan proses pembayaran dengan mudah.</p>
+        </div>
+
+        <div class="menu-card" onclick="location.href='history.html'">
+          💳 <h3>History Transaksi</h3>
+          <p>Lihat catatan transaksi pemesanan buku sebelumnya.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stat">
+        <h4>📗 Total Buku</h4>
+        <p id="totalBuku">-</p>
+      </div>
+      <div class="stat">
+        <h4>🧍‍♂️ Pengguna Terdaftar</h4>
+        <p id="totalUser">-</p>
+      </div>
+      <div class="stat">
+        <h4>🚚 Pengiriman Aktif</h4>
+        <p id="totalTracking">-</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    const namaUser = localStorage.getItem("namaUser");
+    const greetingText = document.getElementById("greetingText");
+
+    function getGreeting() {
+      const now = new Date();
+      const hour = now.getHours();
+      let waktu;
+      if (hour < 12) waktu = "pagi";
+      else if (hour < 18) waktu = "siang";
+      else waktu = "sore";
+
+      greetingText.textContent = namaUser
+        ? `Selamat ${waktu}, ${namaUser}! 👋`
+        : `Selamat ${waktu}! 👋`;
+    }
+
+    getGreeting();
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("namaUser");
+      alert("Anda telah logout!");
+      window.location.href = "index.html";
+    });
+
+    // Statistik dari data.js
+    document.getElementById("totalBuku").textContent = dataKatalogBuku.length + " Judul";
+    document.getElementById("totalUser").textContent = dataPengguna.length + " Akun";
+    document.getElementById("totalTracking").textContent = Object.keys(dataTracking).length + " Pesanan";
+  </script>
+</body>
+</html>
+
+
+<footer class="site-footer">
+  © Amelia Nurmala Dewi– Universitas Pelita Bangsa 2025
+</footer>

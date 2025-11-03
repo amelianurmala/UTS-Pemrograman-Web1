@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Toko Buku Online</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <h2>Login Toko Buku</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="loginBtn">Login</button>
+
+    <div class="login-links">
+      <a href="#" id="forgotLink">Lupa Password?</a>
+      <a href="#" id="registerLink">Daftar</a>
+    </div>
+  </div>
+
+  <!-- Modal Daftar -->
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Daftar Akun Baru</h2>
+      <input type="text" id="regNama" placeholder="Nama Lengkap" required>
+      <input type="email" id="regEmail" placeholder="Email" required>
+      <input type="password" id="regPassword" placeholder="Password" required>
+      <button id="registerBtn">Daftar Sekarang</button>
+    </div>
+  </div>
+
+  <!-- Modal Lupa Password -->
+  <div id="forgotModal" class="modal">
+    <div class="modal-content">
+      <span class="close closeForgot">&times;</span>
+      <h2>Reset Password</h2>
+      <input type="email" id="forgotEmail" placeholder="Masukkan Email Anda">
+      <input type="password" id="newPassword" placeholder="Password Baru">
+      <button id="resetBtn">Reset Password</button>
+    </div>
+  </div>
+
+   <script src="js/data.js"></script>
+   <script src="js/script.js"></script>
+  <script>
+    // === LOGIN ===
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.addEventListener("click", function() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+      const semuaUser = [...dataPengguna, ...localUsers];
+
+      const user = semuaUser.find(
+        (u) => u.email === email && u.password === password
+      );
+
+      if (user) {
+        localStorage.setItem("namaUser", user.nama);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Email atau password salah!");
+      }
+    });
+
+    // === MODAL REGISTER ===
+    const regModal = document.getElementById("registerModal");
+    const regLink = document.getElementById("registerLink");
+    const closeReg = document.querySelector(".close");
+    regLink.onclick = () => regModal.style.display = "flex";
+    closeReg.onclick = () => regModal.style.display = "none";
+
+    window.onclick = (e) => {
+      if (e.target === regModal) regModal.style.display = "none";
+      if (e.target === forgotModal) forgotModal.style.display = "none";
+    };
+
+    document.getElementById("registerBtn").addEventListener("click", () => {
+      const nama = document.getElementById("regNama").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+
+      if (!nama || !email || !password) {
+        alert("Semua kolom wajib diisi!");
+        return;
+      }
+
+      const localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+      const sudahAda = localUsers.find((u) => u.email === email);
+      if (sudahAda) {
+        alert("Email sudah terdaftar!");
+        return;
+      }
+
+      localUsers.push({ nama, email, password, role: "User" });
+      localStorage.setItem("localUsers", JSON.stringify(localUsers));
+      alert("Pendaftaran berhasil! Silakan login.");
+      regModal.style.display = "none";
+    });
+
+    // === MODAL LUPA PASSWORD ===
+    const forgotModal = document.getElementById("forgotModal");
+    const forgotLink = document.getElementById("forgotLink");
+    const closeForgot = document.querySelector(".closeForgot");
+    forgotLink.onclick = () => forgotModal.style.display = "flex";
+    closeForgot.onclick = () => forgotModal.style.display = "none";
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      const email = document.getElementById("forgotEmail").value.trim();
+      const newPass = document.getElementById("newPassword").value.trim();
+
+      if (!email || !newPass) {
+        alert("Isi email dan password baru!");
+        return;
+      }
+
+      // update di localStorage
+      let localUsers = JSON.parse(localStorage.getItem("localUsers")) || [];
+      let user = localUsers.find((u) => u.email === email);
+
+      if (user) {
+        user.password = newPass;
+        localStorage.setItem("localUsers", JSON.stringify(localUsers));
+        alert("Password berhasil direset! Silakan login ulang.");
+        forgotModal.style.display = "none";
+      } else {
+        alert("Email tidak ditemukan di data pendaftaran!");
+      }
+    });
+  </script>
+</body>
+</html>
+
+<script src="js/data.js"></script>
+<script>
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    // Validasi input kosong
+    if (email === "" || password === "") {
+      alert("⚠️ Mohon isi semua kolom sebelum login!");
+      return;
+    }
+
+    // Cek data pengguna
+    const pengguna = dataPengguna.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (!pengguna) {
+      alert("❌ Email atau password salah. Silakan coba lagi!");
+      return;
+    }
+
+    // Simpan nama di sessionStorage untuk ditampilkan di dashboard
+    sessionStorage.setItem("userName", pengguna.nama);
+
+    alert(`✅ Selamat datang, ${pengguna.nama}!`);
+    window.location.href = "dashboard.html";
+  });
+</script>
+

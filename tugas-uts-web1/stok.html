@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Stok / Katalog Buku</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="stok-page">
+
+  <!-- HEADER -->
+  <header class="stok-header">
+    <h1>📚 Informasi Stok / Katalog Buku</h1>
+    <div class="user-section">
+      <span id="userGreeting"></span>
+      <button id="backBtn">⬅ Kembali</button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="stok-main">
+    <div class="stok-card">
+      <h2>Daftar Buku</h2>
+      <table id="tabelBuku">
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Kode</th>
+            <th>Nama Buku</th>
+            <th>Jenis</th>
+            <th>Edisi</th>
+            <th>Stok</th>
+            <th>Harga</th>
+          </tr>
+        </thead>
+        <tbody id="tabelBody">
+          <!-- Data dari data.js akan tampil di sini -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="stok-form-card">
+      <h2>Tambah Buku Baru</h2>
+      <form id="formTambah">
+        <input type="text" id="kode" placeholder="Kode Buku" required />
+        <input type="text" id="nama" placeholder="Nama Buku" required />
+        <input type="text" id="jenis" placeholder="Jenis Buku" required />
+        <input type="text" id="edisi" placeholder="Edisi" required />
+        <input type="number" id="stok" placeholder="Jumlah Stok" required />
+        <input type="text" id="harga" placeholder="Harga (Rp)" required />
+        <button type="submit">+ Tambah Buku</button>
+      </form>
+    </div>
+  </main>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+  <script>
+    // Pastikan user login dulu
+    const namaUser = localStorage.getItem("namaUser");
+    const userGreeting = document.getElementById("userGreeting");
+    if (!namaUser) {
+      alert("Silakan login terlebih dahulu!");
+      window.location.href = "index.html";
+    } else {
+      userGreeting.textContent = `Halo, ${namaUser}! 👋`;
+    }
+
+    const tabelBody = document.getElementById("tabelBody");
+
+    // Fungsi untuk menampilkan data katalog dari data.js
+    function tampilkanData() {
+      tabelBody.innerHTML = "";
+      dataKatalogBuku.forEach((buku) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><img src="${buku.cover}" alt="${buku.namaBarang}" class="cover-img"></td>
+          <td>${buku.kodeBarang}</td>
+          <td>${buku.namaBarang}</td>
+          <td>${buku.jenisBarang}</td>
+          <td>${buku.edisi}</td>
+          <td>${buku.stok}</td>
+          <td>${buku.harga}</td>
+        `;
+        tabelBody.appendChild(row);
+      });
+    }
+
+    tampilkanData();
+
+    // Tambah buku baru dengan JavaScript DOM
+    document.getElementById("formTambah").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const kode = document.getElementById("kode").value.trim();
+      const nama = document.getElementById("nama").value.trim();
+      const jenis = document.getElementById("jenis").value.trim();
+      const edisi = document.getElementById("edisi").value.trim();
+      const stok = document.getElementById("stok").value.trim();
+      const harga = document.getElementById("harga").value.trim();
+
+      if (!kode || !nama || !jenis || !edisi || !stok || !harga) {
+        alert("Harap isi semua kolom terlebih dahulu!");
+        return;
+      }
+
+      const bukuBaru = {
+        kodeBarang: kode,
+        namaBarang: nama,
+        jenisBarang: jenis,
+        edisi: edisi,
+        stok: parseInt(stok),
+        harga: `Rp ${harga}`,
+      };
+
+      dataKatalogBuku.push(bukuBaru);
+      tampilkanData();
+
+      alert("Buku baru berhasil ditambahkan!");
+      this.reset();
+    });
+
+    // Tombol kembali ke dashboard
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+
+  </script>
+</body>
+</html>
+
+<footer class="site-footer">
+  © Amelia Nurmala Dewi– Universitas Pelita Bangsa 2025
+</footer>

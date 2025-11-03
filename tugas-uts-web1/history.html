@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riwayat Transaksi</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="history-page">
+
+  <header class="history-header">
+    <h1>📘 Riwayat Transaksi</h1>
+    <div>
+      <span id="userGreeting">Halo!</span>
+      <button id="backBtn">⬅ Kembali</button>
+    </div>
+  </header>
+
+  <main class="history-container">
+    <h2>Data Pengiriman & Pemesanan</h2>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Nomor DO</th>
+          <th>Nama Pemesan</th>
+          <th>Status</th>
+          <th>Tanggal Kirim</th>
+          <th>Total</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tabelHistory"></tbody>
+    </table>
+  </main>
+
+  <!-- Modal Detail -->
+  <div id="modalDetail" class="modal">
+    <div class="modal-content">
+      <h3>Detail Pengiriman</h3>
+      <p><b>Nomor DO:</b> <span id="detailNomor"></span></p>
+      <p><b>Ekspedisi:</b> <span id="detailEkspedisi"></span></p>
+      <p><b>Paket:</b> <span id="detailPaket"></span></p>
+      <p><b>Status:</b> <span id="detailStatus"></span></p>
+      <h4>Riwayat Perjalanan:</h4>
+      <ul id="detailPerjalanan"></ul>
+      <button id="closeModal">Tutup</button>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    const namaUser = localStorage.getItem("namaUser");
+    const greeting = document.getElementById("userGreeting");
+    if (!namaUser) {
+      alert("Silakan login terlebih dahulu!");
+      window.location.href = "index.html";
+    } else {
+      greeting.textContent = `Halo, ${namaUser}! 👋`;
+    }
+
+    const tabelBody = document.getElementById("tabelHistory");
+    const modal = document.getElementById("modalDetail");
+    const closeModal = document.getElementById("closeModal");
+
+    function tampilkanHistory() {
+      tabelBody.innerHTML = "";
+      for (const id in dataTracking) {
+        const item = dataTracking[id];
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.nomorDO}</td>
+          <td>${item.nama}</td>
+          <td>${item.status}</td>
+          <td>${item.tanggalKirim}</td>
+          <td>${item.total}</td>
+          <td><button class="btn-detail" data-id="${id}">Detail</button></td>
+        `;
+        tabelBody.appendChild(tr);
+      }
+    }
+    tampilkanHistory();
+
+    document.addEventListener("click", (e) => {
+      if (e.target.classList.contains("btn-detail")) {
+        const id = e.target.getAttribute("data-id");
+        const item = dataTracking[id];
+        document.getElementById("detailNomor").textContent = item.nomorDO;
+        document.getElementById("detailEkspedisi").textContent = item.ekspedisi;
+        document.getElementById("detailPaket").textContent = item.paket;
+        document.getElementById("detailStatus").textContent = item.status;
+
+        const perjalananList = document.getElementById("detailPerjalanan");
+        perjalananList.innerHTML = "";
+        item.perjalanan.forEach((p) => {
+          const li = document.createElement("li");
+          li.textContent = `${p.waktu} — ${p.keterangan}`;
+          perjalananList.appendChild(li);
+        });
+        modal.style.display = "flex";
+      }
+    });
+
+    closeModal.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
+
+
+<footer class="site-footer">
+  © Amelia Nurmala Dewi– Universitas Pelita Bangsa 2025
+</footer>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halaman Pemesanan</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="checkout-page">
+  <header class="checkout-header">
+    <h1>🛒 Halaman Pemesanan</h1>
+    <div class="user-info">
+      <span id="userGreeting"></span>
+      <button id="backBtn">⬅ Kembali</button>
+    </div>
+  </header>
+
+  <main class="checkout-main">
+    <!-- TABEL PEMESANAN -->
+    <div class="checkout-card">
+      <h2>Data Pemesanan</h2>
+      <table id="tabelPemesanan">
+        <thead>
+          <tr>
+            <th>Nomor DO</th>
+            <th>Nama</th>
+            <th>Status</th>
+            <th>Ekspedisi</th>
+            <th>Tanggal Kirim</th>
+            <th>Total</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tabelBody">
+          <!-- data dari dataTracking akan muncul di sini -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- FORM TAMBAH/UBAH -->
+    <div class="checkout-form-card">
+      <h2>Tambah / Ubah Pemesanan</h2>
+      <form id="formPemesanan">
+        <input type="text" id="nomorDO" placeholder="Nomor DO" required />
+        <input type="text" id="nama" placeholder="Nama Pemesan" required />
+        <input type="text" id="ekspedisi" placeholder="Ekspedisi" required />
+        <input type="date" id="tanggalKirim" required />
+        <input type="text" id="total" placeholder="Total Pembayaran (Rp)" required />
+        <select id="status" required>
+          <option value="">Pilih Status</option>
+          <option value="Dikirim">Dikirim</option>
+          <option value="Dalam Perjalanan">Dalam Perjalanan</option>
+          <option value="Selesai">Selesai</option>
+        </select>
+        <button type="submit" id="btnSubmit">💾 Simpan Data</button>
+      </form>
+    </div>
+  </main>
+
+<script src="js/data.js"></script>
+<script src="js/script.js"></script>
+  <script>
+    // --- Cek Login ---
+    const namaUser = localStorage.getItem("namaUser");
+    const userGreeting = document.getElementById("userGreeting");
+    if (!namaUser) {
+      alert("Silakan login terlebih dahulu!");
+      window.location.href = "index.html";
+    } else {
+      userGreeting.textContent = `Halo, ${namaUser}! 👋`;
+    }
+
+    const tabelBody = document.getElementById("tabelBody");
+    const formPemesanan = document.getElementById("formPemesanan");
+    const nomorInput = document.getElementById("nomorDO");
+    const namaInput = document.getElementById("nama");
+    const ekspedisiInput = document.getElementById("ekspedisi");
+    const tanggalInput = document.getElementById("tanggalKirim");
+    const totalInput = document.getElementById("total");
+    const statusInput = document.getElementById("status");
+
+    // --- Fungsi tampilkan data dari data.js ---
+    function tampilkanData() {
+      tabelBody.innerHTML = "";
+      for (const key in dataTracking) {
+        const item = dataTracking[key];
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.nomorDO}</td>
+          <td>${item.nama}</td>
+          <td>${item.status}</td>
+          <td>${item.ekspedisi}</td>
+          <td>${item.tanggalKirim}</td>
+          <td>${item.total}</td>
+          <td><button class="edit-btn" data-id="${key}">✏️ Ubah</button></td>
+        `;
+        tabelBody.appendChild(row);
+      }
+
+      // tombol edit
+      document.querySelectorAll(".edit-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-id");
+          const data = dataTracking[id];
+          nomorInput.value = data.nomorDO;
+          namaInput.value = data.nama;
+          ekspedisiInput.value = data.ekspedisi;
+          tanggalInput.value = data.tanggalKirim;
+          totalInput.value = data.total.replace("Rp ", "");
+          statusInput.value = data.status;
+        });
+      });
+    }
+
+    tampilkanData();
+
+    // --- Tambah / ubah data ---
+    formPemesanan.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nomorDO = nomorInput.value.trim();
+      const nama = namaInput.value.trim();
+      const ekspedisi = ekspedisiInput.value.trim();
+      const tanggalKirim = tanggalInput.value.trim();
+      const total = totalInput.value.trim();
+      const status = statusInput.value;
+
+      if (!nomorDO || !nama || !ekspedisi || !tanggalKirim || !total || !status) {
+        alert("Semua kolom wajib diisi!");
+        return;
+      }
+
+      dataTracking[nomorDO] = {
+        nomorDO,
+        nama,
+        ekspedisi,
+        tanggalKirim,
+        total: `Rp ${total}`,
+        status,
+        perjalanan: [],
+      };
+
+      alert("Data pemesanan berhasil disimpan!");
+      formPemesanan.reset();
+      tampilkanData();
+    });
+
+    // --- Tombol kembali ke dashboard ---
+    document.getElementById("backBtn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+  </script>
+</body>
+</html>
+
+
+<footer class="site-footer">
+  © Amelia Nurmala Dewi– Universitas Pelita Bangsa 2025
+</footer>
