@@ -13,7 +13,7 @@
 
 <img width="1366" height="677" alt="Screenshot (1019)" src="https://github.com/user-attachments/assets/640f218f-7e4b-4178-b603-b989d0d0dbd2" />
 
-
+### Penjelasan
 Pada halaman ini, pengguna diminta mengisi **nama lengkap**, **email**, dan **password** untuk membuat akun baru. Jika email yang dimasukkan sudah terdaftar di sistem, maka akan muncul notifikasi pop-up bertuliskan *“Email sudah terdaftar!”*.  
 - Fungsi ini berguna untuk mencegah duplikasi akun dan menjaga validitas data pengguna.
   
@@ -22,7 +22,7 @@ Pada halaman ini, pengguna diminta mengisi **nama lengkap**, **email**, dan **pa
 
 <img width="1366" height="684" alt="Screenshot (1020)" src="https://github.com/user-attachments/assets/1e89012f-ba0e-41c4-af4e-bbf55094768a" />
 
-
+### Penjelasan
 Tampilan pop-up ini muncul setelah pengguna menekan tombol **Daftar Sekarang**, namun sistem menemukan bahwa email tersebut sudah ada di database.  
 - Dengan adanya alert ini, pengguna dapat langsung mengetahui bahwa mereka perlu menggunakan email lain atau melakukan *reset password* jika lupa kata sandi.
 
@@ -30,7 +30,7 @@ Tampilan pop-up ini muncul setelah pengguna menekan tombol **Daftar Sekarang**, 
 
 <img width="1366" height="681" alt="Screenshot (1021)" src="https://github.com/user-attachments/assets/94ee4115-faba-49ff-845e-406d590b3990" />
 
-
+### Penjelasan
 Pada halaman ini, pengguna dapat melakukan pengaturan ulang kata sandi dengan memasukkan **email terdaftar** dan **password baru**.  
 - Fitur ini membantu pengguna yang lupa kata sandi agar dapat kembali mengakses akun tanpa harus membuat akun baru.
 
@@ -38,7 +38,7 @@ Pada halaman ini, pengguna dapat melakukan pengaturan ulang kata sandi dengan me
 
 <img width="1366" height="684" alt="Screenshot (1022)" src="https://github.com/user-attachments/assets/bac2a6a1-a093-4cc1-afca-e2331a89ace8" />
 
-
+### Penjelasan
 Setelah akun berhasil dibuat atau password direset, pengguna dapat masuk melalui halaman login dengan memasukkan **email** dan **password**.  
 - Jika data yang dimasukkan benar, pengguna akan diarahkan ke halaman utama aplikasi. Jika salah, maka akan muncul notifikasi error sesuai validasi sistem.
 
@@ -116,7 +116,7 @@ var dataTracking = {
 
 <img width="1366" height="673" alt="Screenshot (1029)" src="https://github.com/user-attachments/assets/fa2be41e-61be-41d3-adfc-f1f78e9247f7" />
 
-
+### Penjelasan
 Halaman **Laporan Pemesanan** atau **History Transaksi** merupakan fitur yang berfungsi untuk **menampilkan rekap seluruh data pesanan** yang sudah dilakukan oleh pengguna.  
 Data yang ditampilkan diambil langsung dari objek `dataTracking` pada file `data.js`, di mana setiap entri pesanan memiliki informasi lengkap seperti:
 
